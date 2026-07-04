@@ -12,6 +12,9 @@ import "./styles.css";
 
 const endpointPath =
   "/api/bookings/initialize-paystack-accomodation-reservations-customer";
+const apiBaseUrl = import.meta.env.DEV
+  ? "/api-proxy"
+  : "https://api-data-connection.ginilog.org";
 
 const defaultToken = "";
 
@@ -116,7 +119,7 @@ function App() {
     };
   }, [token]);
 
-  const requestUrl = `${window.location.origin}/api-proxy${endpointPath}`;
+  const requestUrl = `${apiBaseUrl}${endpointPath}`;
   const requestBody = useMemo(() => buildPayload(form), [form]);
   const checkoutUrl =
     typeof response?.data === "object" ? response.data?.data?.authorizationUrl : "";
@@ -132,7 +135,7 @@ function App() {
 
     try {
       const startedAt = performance.now();
-      const result = await fetch(`/api-proxy${endpointPath}`, {
+      const result = await fetch(requestUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
